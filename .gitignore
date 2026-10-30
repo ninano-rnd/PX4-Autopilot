@@ -109,7 +109,18 @@ src/systemcmds/topic_listener/listener_generated.cpp
 
 # colcon
 log/
+/install/
 keys/
+
+# Local SITL runtime state and generated configuration link
+/dataman
+/etc
+/parameters.bson
+/parameters_backup.bson
+
+# Local session exports and temporary images
+/pi-session-*.html
+/images/rn_image_picker_lib_temp_*
 
 # metadata
 _emscripten_sdk/
