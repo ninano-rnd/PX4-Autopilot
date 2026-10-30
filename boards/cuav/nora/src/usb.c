@@ -57,3 +57,20 @@ __EXPORT void stm32_usbsuspend(FAR struct usbdev_s *dev, bool resume)
 {
 	uinfo("resume: %d\n", resume);
 }
+
+#if !defined(BUILD_BOOTLOADER)
+/************************************************************************************
+ * Name:  board_read_VBUS_state
+ *
+ * Description:
+ *   Overrides the generic board_ctrl.c implementation, which reads GPIO_OTGFS_VBUS
+ *   (PA9). PA9 is NC on this board revision, so it never reports VBUS present and
+ *   cdcacm_autostart never starts MAVLink/NSH on the USB CDC/ACM port. The real
+ *   VBUS-valid signal on this board is GPIO_nVDD_USB_VALID (PG0), active-low.
+ *
+ ************************************************************************************/
+__EXPORT int board_read_VBUS_state(void)
+{
+	return px4_arch_gpioread(GPIO_nVDD_USB_VALID) ? 1 : 0;
+}
+#endif /* !BUILD_BOOTLOADER */

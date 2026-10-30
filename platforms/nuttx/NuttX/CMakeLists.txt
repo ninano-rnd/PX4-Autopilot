@@ -168,6 +168,13 @@ add_library(nuttx_apps STATIC IMPORTED GLOBAL)
 set_property(TARGET nuttx_apps PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/apps/libapps.a)
 add_dependencies(nuttx_apps nuttx_apps_build)
 
+# Board headers live outside the NuttX source tree. Track them explicitly:
+# otherwise a board pin-map edit can rebuild PX4 while reusing stale NuttX
+# archives (including the UART driver's compiled GPIO configuration).
+file(GLOB_RECURSE nuttx_board_headers CONFIGURE_DEPENDS LIST_DIRECTORIES false
+	${NUTTX_CONFIG_DIR}/include/*.h
+)
+
 # helper for all targets
 function(add_nuttx_dir nuttx_lib nuttx_lib_dir kernel extra target)
 	if (${target} STREQUAL all)
@@ -193,6 +200,7 @@ function(add_nuttx_dir nuttx_lib nuttx_lib_dir kernel extra target)
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${NUTTX_DIR}/${nuttx_lib_dir}/lib${nuttx_lib}.a ${CMAKE_CURRENT_BINARY_DIR}/nuttx/${nuttx_lib_dir}/lib${nuttx_lib}.a
 		DEPENDS
 			${nuttx_lib_files}
+			${nuttx_board_headers}
 			nuttx_context ${NUTTX_DIR}/include/nuttx/config.h
 		WORKING_DIRECTORY ${NUTTX_DIR}
 		#USES_TERMINAL

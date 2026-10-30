@@ -3,3 +3,13 @@ menuconfig DRIVERS_RC_INPUT
 	default n
 	---help---
 		Enable support for rc_input
+
+config RC_INPUT_SBUS_CAPTURE
+	bool "PB4/TIM3 inverted SBUS capture (custom Nora)"
+	depends on DRIVERS_RC_INPUT && ARCH_CHIP_STM32H7
+	default n
+	---help---
+		Replace the UART rc_input implementation with dedicated TIM3 paired
+		input capture on PB4. Requires BOARD_SBUS_TIM3_GPIO, a separate HRT
+		timer and no other TIM3 user. Supports only inverted 100 kbaud SBUS.
+		No UART protocols, DSM binding, or PPM input in this build.

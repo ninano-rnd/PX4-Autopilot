@@ -33,5 +33,10 @@
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
+# Lets board_config.h distinguish a bootloader compile from the application
+# firmware compile (e.g. a board whose VBUS-sense pin is only wired/usable for
+# one of the two builds). Not currently checked by any board except cuav/nora.
+add_compile_definitions(BUILD_BOOTLOADER)
+
 add_subdirectory(common)
 add_subdirectory(${PX4_CHIP_MANUFACTURER})

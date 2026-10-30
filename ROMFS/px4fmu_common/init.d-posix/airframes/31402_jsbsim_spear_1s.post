@@ -1,0 +1,2 @@
+#!/bin/sh
+mavlink start -u 14600 -o 14601 -t 127.0.0.1 -m onboard -r 20000

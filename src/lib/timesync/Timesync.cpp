@@ -69,6 +69,11 @@ void Timesync::update(const uint64_t now_us, const int64_t remote_timestamp_ns, 
 					PX4_DEBUG("time jump detected. Resetting time synchroniser.");
 					// Reset the filter
 					reset_filter();
+					// Reseed from this low-RTT observation before exposing offset().
+					// The XRCE callback reads it immediately, even before convergence.
+					// Do not publish a transient zero offset or retain an obsolete one.
+					add_sample(offset_us);
+					_sequence = 1;
 				}
 
 			} else {

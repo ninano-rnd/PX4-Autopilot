@@ -62,9 +62,9 @@ case "$model" in
         bubo_4s)
             MODEL_NAME="bubo_4s"
             ;;
-	goshawk_10s)
-	    MODEL_NAME="goshawk_10s"
-	    ;;
+				goshawk_10s)
+						MODEL_NAME="goshawk_10s"
+						;;
         spear_1s)
             MODEL_NAME="spear_1s"
             ;;
@@ -76,12 +76,8 @@ esac
 
 export JSBSIM_AIRCRAFT_MODEL="$MODEL_NAME"
 
-# Allow per-model scene override (e.g. tailsitters need a non-zero initial theta)
-# Falls back to the world argument if no model-specific scene exists.
-SCENE_FILE="${src_path}/Tools/simulation/jsbsim/jsbsim_bridge/scene/${world}_${model}.xml"
-if [ ! -f "$SCENE_FILE" ]; then
-	SCENE_FILE="${src_path}/Tools/simulation/jsbsim/jsbsim_bridge/scene/${world}.xml"
-fi
+# Use the selected world scene for all models.
+SCENE_FILE="${src_path}/Tools/simulation/jsbsim/jsbsim_bridge/scene/${world}.xml"
 
 if [[ -n "$HEADLESS" ]]; then
 	echo "not running flightgear gui"
@@ -98,6 +94,8 @@ else
 fi
 
 # Start MicroXRCEAgent if not already running
+####################################################################
+
 AGENT_PID=""
 if ! pgrep -x "MicroXRCEAgent" > /dev/null; then
 	AGENT_BIN="MicroXRCEAgent"
@@ -116,7 +114,24 @@ if ! pgrep -x "MicroXRCEAgent" > /dev/null; then
 	fi
 fi
 
-"${build_path}/build_jsbsim_bridge/jsbsim_bridge" ${model} -s "${SCENE_FILE}" 2> /dev/null &
+####################################################################
+
+# Native JSBSim CSV output paths are relative to its working directory.
+# Keep each Goshawk run separate, including multiple starts in the same second.
+JSBSIM_LOG_DIR=""
+if [[ "$model" == "goshawk_10s" ]]; then
+	mkdir -p "${rootfs}/log/jsbsim"
+	JSBSIM_LOG_DIR=$(mktemp -d "${rootfs}/log/jsbsim/goshawk_$(date -u +%Y-%m-%dT%H-%M-%SZ)_XXXXXX")
+	echo "JSBSim moment log: ${JSBSIM_LOG_DIR}/goshawk_moments.csv"
+fi
+
+(
+	if [[ -n "$JSBSIM_LOG_DIR" ]]; then
+		cd "$JSBSIM_LOG_DIR" || exit 1
+	fi
+	# exec keeps JSBSIM_PID pointing at the bridge for normal cleanup.
+	exec "${build_path}/build_jsbsim_bridge/jsbsim_bridge" "${model}" -s "${SCENE_FILE}"
+) 2> /dev/null &
 JSBSIM_PID=$!
 
 pushd "$rootfs" >/dev/null

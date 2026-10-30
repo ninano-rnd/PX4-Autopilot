@@ -44,7 +44,8 @@
 RM3100::RM3100(device::Device *interface, const I2CSPIDriverConfig &config) :
 	I2CSPIDriver(config),
 	_px4_mag(interface->get_device_id(), config.rotation),
-	_interface(interface)
+	_interface(interface),
+	_axis_reversal_mask(config.custom1)
 {
 	_px4_mag.set_scale(1.f / (RM3100_SENSITIVITY * UTESLA_TO_GAUSS));
 }
@@ -195,6 +196,13 @@ void RM3100::RunImpl()
 		perf_count(_range_error_perf);
 		return;
 	}
+
+	// compensate for a reversed sensor connector/PCB wiring, per axis
+	if (_axis_reversal_mask & (1 << 0)) { xraw = -xraw; }
+
+	if (_axis_reversal_mask & (1 << 1)) { yraw = -yraw; }
+
+	if (_axis_reversal_mask & (1 << 2)) { zraw = -zraw; }
 
 	// only publish changes
 	if (_raw_data_prev[0] != xraw || _raw_data_prev[1] != yraw || _raw_data_prev[2] != zraw) {

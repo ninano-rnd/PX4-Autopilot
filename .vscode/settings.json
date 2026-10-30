@@ -11,16 +11,16 @@
         "C_Cpp.default.includePath": [
                 "${workspaceFolder}/**",
                 "/opt/ros/jazzy/include/**",
-                "${workspaceFolder}/ws/install/**",
-                "${workspaceFolder}/ws/build/**"
+                "${workspaceFolder}/pilot_ws/install/**",
+                "${workspaceFolder}/pilot_ws/build/**"
         ],
         "python.autoComplete.extraPaths": [
                 "/opt/ros/jazzy/lib/python3.12/site-packages",
-                "${workspaceFolder}/ws/install/px4_msgs/lib/python3.12/site-packages"
+                "${workspaceFolder}/pilot_ws/install/px4_msgs/lib/python3.12/site-packages"
         ],
         "python.analysis.extraPaths": [
                 "/opt/ros/jazzy/lib/python3.12/site-packages",
-                "${workspaceFolder}/ws/install/px4_msgs/lib/python3.12/site-packages"
+                "${workspaceFolder}/pilot_ws/install/px4_msgs/lib/python3.12/site-packages"
         ],
         "clangd.arguments": [
                 "--compile-commands-dir=${workspaceFolder}",
@@ -149,4 +149,5 @@
         "yaml.schemas": {
                 "${workspaceFolder}/validation/module_schema.yaml": "${workspaceFolder}/src/modules/*/module.yaml"
         },
+        "ros.distro": "jazzy",
 }

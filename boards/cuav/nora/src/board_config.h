@@ -150,29 +150,41 @@
 /* USB
  *  OTG FS: PA9  OTG_FS_VBUS VBUS sensing
  *  HS USB EN: PH15
+ *
+ *  NOTE: PA9 and PH15 are NC on this board revision (confirmed against schematic).
+ *  GPIO_OTGFS_VBUS is only defined for the bootloader build: src/bootloader_main.c and
+ *  src/hw_config.h still reference it directly (reading the unconnected PA9 pin). It is
+ *  intentionally left UNDEFINED for the application firmware build so that the generic
+ *  board_read_VBUS_state() in platforms/nuttx/src/px4/common/board_ctrl.c (compiled only
+ *  `#if defined(GPIO_OTGFS_VBUS)`) is skipped there. The app instead uses the override in
+ *  src/usb.c, which reads the real VBUS-valid signal, GPIO_nVDD_USB_VALID (PG0). Without
+ *  this, cdcacm_autostart waits forever on a PA9 that never reports VBUS present, and USB
+ *  never comes up as MAVLink/NSH after the bootloader hands off to the app.
  */
+#if defined(BUILD_BOOTLOADER)
 #define GPIO_OTGFS_VBUS         /* PA9 */  (GPIO_INPUT|GPIO_PULLDOWN|GPIO_SPEED_100MHz|GPIO_PORTA|GPIO_PIN9)
+#endif
 #define GPIO_HS_USB_EN          /* PH15 */ (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_CLEAR|GPIO_PORTH|GPIO_PIN15)
 
 /* High-resolution timer */
-#define HRT_TIMER               3  /* use timer3 for the HRT */
-#define HRT_TIMER_CHANNEL       3  /* use capture/compare channel 3 */
+#define HRT_TIMER               2  /* TIM3 is dedicated to SBUS capture; UAVCAN uses TIM6 */
+#define HRT_TIMER_CHANNEL       3
 
-
-#define HRT_PPM_CHANNEL         /* T3C1 */  1  /* use capture/compare channel 1 */
-#define GPIO_PPM_IN             /* PB4 T3C1 */ GPIO_TIM3_CH1IN_2
-#define RC_SERIAL_PORT          "/dev/ttyS5"
-#define RC_SERIAL_SINGLEWIRE
-
-/**
- * GPIO PPM_IN on PB4 T3C1
- * SPEKTRUM_RX (it's TX or RX in Bind) on UART8 PE0
- *   Inversion is possible in the UART and can drive GPIO_PPM_IN as an output
+/* Custom board: PB4 TIM3_CH1 (AF2), standard inverted SBUS, idle LOW.
+ * CH1/CH2 capture opposite edges of TI1; no UART, PPM or DSM binding on PB4.
  */
-#define GPIO_PPM_IN_AS_OUT           (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_SET|GPIO_PORTB|GPIO_PIN4)
-#define SPEKTRUM_RX_AS_GPIO_OUTPUT() px4_arch_configgpio(GPIO_PPM_IN_AS_OUT)
-#define SPEKTRUM_RX_AS_UART()       /* Can be left as uart */
-#define SPEKTRUM_OUT(_one_true)      px4_arch_gpiowrite(GPIO_PPM_IN_AS_OUT, (_one_true))
+#define BOARD_SBUS_TIM3_GPIO     ((GPIO_TIM3_CH1IN_2 & ~GPIO_PUPD_MASK) | GPIO_PULLDOWN)
+
+/* Legacy serial RC connector, unused by the TIM3 capture implementation. */
+#define RC_SERIAL_PORT          "/dev/ttyS5"
+
+/* Shared DSM library helpers stay on the legacy UART8 connector, never PB4.
+ * The TIM3 rc_input module does not expose binding commands.
+ */
+#define GPIO_SPEKTRUM_OUT            (GPIO_OUTPUT|GPIO_PUSHPULL|GPIO_SPEED_2MHz|GPIO_OUTPUT_SET|GPIO_PORTE|GPIO_PIN0)
+#define SPEKTRUM_RX_AS_GPIO_OUTPUT() px4_arch_configgpio(GPIO_SPEKTRUM_OUT)
+#define SPEKTRUM_RX_AS_UART()        px4_arch_configgpio(GPIO_UART8_RX)
+#define SPEKTRUM_OUT(_one_true)      px4_arch_gpiowrite(GPIO_SPEKTRUM_OUT, (_one_true))
 
 /* RSSI_IN */
 #define GPIO_RSSI_IN                   /* PB0  */ (GPIO_INPUT|GPIO_PULLUP|GPIO_PORTB|GPIO_PIN0)
@@ -187,7 +199,7 @@
  * this board support the ADC system_power interface, and therefore
  * provides the true logic GPIO BOARD_ADC_xxxx macros.
  */
-#define BOARD_ADC_USB_CONNECTED (px4_arch_gpioread(GPIO_OTGFS_VBUS))
+#define BOARD_ADC_USB_CONNECTED (!px4_arch_gpioread(GPIO_nVDD_USB_VALID))
 #define BOARD_ADC_USB_VALID     (!px4_arch_gpioread(GPIO_nVDD_USB_VALID))
 #define BOARD_ADC_BRICK1_VALID  (!px4_arch_gpioread(GPIO_nVDD_BRICK1_VALID))
 #define BOARD_ADC_BRICK2_VALID  (!px4_arch_gpioread(GPIO_nVDD_BRICK2_VALID))
@@ -230,7 +242,6 @@
 		PX4_GPIO_PIN_OFF(GPIO_SDMMC1_CMD),\
 		GPIO_VDD_3V3_SD_CARD_EN,          \
 		GPIO_TONE_ALARM_IDLE,             \
-		GPIO_OTGFS_VBUS,                  \
 		PX4_GPIO_PIN_OFF(GPIO_HS_USB_EN), \
 		GPIO_RSSI_IN,                     \
 		FMU_LED_AMBER,                    \

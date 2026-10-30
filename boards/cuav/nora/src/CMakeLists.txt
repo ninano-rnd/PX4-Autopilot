@@ -35,6 +35,7 @@ if("${PX4_BOARD_LABEL}" STREQUAL  "bootloader")
 		bootloader_main.c
 		usb.c
 	)
+	target_compile_definitions(drivers_board PRIVATE BUILD_BOOTLOADER)
 	target_link_libraries(drivers_board
 		PRIVATE
 			nuttx_arch

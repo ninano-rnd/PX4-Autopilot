@@ -9,54 +9,15 @@
 
 . ${R}etc/init.d/rc.vtol_defaults
 
-# -------------------------------------------------------
-# Control Allocation (CA) - 기체 프레임 및 로터 배치 설정
-# -------------------------------------------------------
-
-##### Frame Params
-
-param set-default MAV_TYPE 20
-
-# CA_AIRFRAME: 기체 프레임 유형 선택
-#   4 = 쿼드 테일시터 (Quad Tailsitter)
-param set-default CA_AIRFRAME 4
-
-# CA_ROTOR_COUNT: 총 로터(모터) 수
-param set-default CA_ROTOR_COUNT 4
-
-# --- 로터 0: 우전방 (Front-Right) ---
-param set-default CA_ROTOR0_PX 0.2
-param set-default CA_ROTOR0_PY 0.2
-param set-default CA_ROTOR0_KM 0.05 # (+값 = 반시계 방향 회전, CCW)
-
-# --- 로터 1: 좌후방 (Rear-Left) ---
-param set-default CA_ROTOR1_PX -0.2
-param set-default CA_ROTOR1_PY -0.2
-param set-default CA_ROTOR1_KM 0.05 # (+값 = 반시계 방향 회전, CCW)
-
-# --- 로터 2: 좌전방 (Front-Left) ---
-param set-default CA_ROTOR2_PX 0.2
-param set-default CA_ROTOR2_PY -0.2
-param set-default CA_ROTOR2_KM -0.05 # (-값 = 시계 방향 회전, CW)
-
-# --- 로터 3: 우후방 (Rear-Right) ---
-param set-default CA_ROTOR3_PX -0.2
-param set-default CA_ROTOR3_PY 0.2
-param set-default CA_ROTOR3_KM -0.05 # (-값 = 시계 방향 회전, CW)
-
-param set-default CA_SV_CS_COUNT 0
 
 # -------------------------------------------------------
-# PWM 출력 채널 - 모터 함수 매핑 설정
+# Pre-arm check
 # -------------------------------------------------------
+param set COM_RCL_EXCEPT 31
+param set COM_DLL_EXCEPT 31
+param set COM_RC_IN_MODE 4
 
-# PWM_MAIN_FUNC1~4: 각 PWM 출력 채널에 모터 기능 할당
-param set-default PWM_MAIN_FUNC1 101
-param set-default PWM_MAIN_FUNC2 102
-param set-default PWM_MAIN_FUNC3 103
-param set-default PWM_MAIN_FUNC4 104
 
-# -------------------------------------------------------
 
 # -------------------------------------------------------
 # IMU 자세 보정 (Board Rotation)
@@ -83,14 +44,11 @@ param set-default FD_FAIL_P 90
 # FW_P_TC: 피치 자세 제어 시정수 (초). 값이 클수록 부드럽고 느린 응답.
 # param set-default FW_P_TC 0.1
 
-# FW_PR_I: 피치 레이트 적분 게인 (I gain)
-param set-default FW_PR_I 0.00
-# FW_PR_P: 피치 레이트 비례 게인 (P gain)
-param set-default FW_PR_P 0.15
-# FW_PR_D: 피치 레이트 미분 게인 (D gain)
-# param set-default FW_PR_D 0.0
-# FW_PR_FF: 피치 레이트 피드포워드 게인
-param set-default FW_PR_FF 0.0
+param set FW_PR_D 0.003
+param set FW_PR_FF 0.001
+param set FW_PR_I 0.000
+param set FW_PR_IMAX 0.400
+param set FW_PR_P 0.18
 # FW_PSP_OFF: 수평 비행 시 기본 피치 트림 오프셋 (도)
 param set-default FW_PSP_OFF 6
 
@@ -101,31 +59,31 @@ param set-default FW_PSP_OFF 6
 # FW_R_TC: 롤 자세 제어 시정수 (초)
 # param set-default FW_R_TC 0.4
 # FW_RR_FF: 롤 레이트 피드포워드 게인
-param set-default FW_RR_FF 0.1
-# FW_RR_I: 롤 레이트 적분 게인
-param set-default FW_RR_I 0.05
-# FW_RR_P: 롤 레이트 비례 게인
-param set-default FW_RR_P 0.15
-# FW_RR_D: 롤 레이트 미분 게인
-# param set-default FW_RR_D 0.0
-# FW_YR_P: 요 레이트 비례 게인
-param set-default FW_YR_P 0.15
-# FW_YR_FF/I: 요 레이트 게인 최소화 - 요 제어 안정화를 위해 적절히 인가
-param set-default FW_YR_FF 0
-param set-default FW_YR_I 0.05
-# FW_YR_D: 요 레이트 미분 게인
-param set-default FW_YR_D 0.0
+param set FW_RR_D 0.0
+param set FW_RR_FF 0.1
+param set FW_RR_I 0.05
+param set FW_RR_IMAX 0.2
+param set FW_RR_P 0.15
+
+# FW_YR_*: 요 레이트 PID 제어 파라미터
+param set FW_YR_D 0.0
+param set FW_YR_FF 0.0
+param set FW_YR_I 0.05
+param set FW_YR_IMAX 0.20
+param set FW_YR_P 0.15
 
 # -------------------------------------------------------
 # 고정익 스로틀 / TECS (FW Throttle / Energy Control System)
 # -------------------------------------------------------
 
+param set FW_T_THR_DAMPING 0.1 #0.05
+param set FW_T_ALT_TC 8 #5
 # FW_THR_TRIM: 수평 비행 트림 스로틀 (0~1)
-param set-default FW_THR_TRIM 0.35
+param set-default FW_THR_TRIM 0.5
 # FW_THR_MAX: 최대 스로틀 (0~1)
 param set-default FW_THR_MAX 0.8
 # FW_THR_MIN: 최소 스로틀 (0~1)
-param set-default FW_THR_MIN 0.05
+param set-default FW_THR_MIN 0.25
 # FW_T_CLMB_MAX: TECS 최대 상승률 (m/s)
 param set-default FW_T_CLMB_MAX 6
 # FW_T_HRATE_FF: TECS 고도 레이트 피드포워드 게인
@@ -212,3 +170,52 @@ param set-default SYS_HAS_NUM_ASPD 0
 # COM_RC_IN_MODE 4: 수동 조종 입력(RC/Joystick) 검사 및 이로 인한 Failsafe 비활성화
 param set-default COM_RC_IN_MODE 4
 
+# -------------------------------------------------------
+# Control Allocation (CA) - 기체 프레임 및 로터 배치 설정
+# -------------------------------------------------------
+
+##### Frame Params
+
+param set-default MAV_TYPE 20
+
+# CA_AIRFRAME: 기체 프레임 유형 선택
+#   4 = 쿼드 테일시터 (Quad Tailsitter)
+param set-default CA_AIRFRAME 4
+
+# CA_ROTOR_COUNT: 총 로터(모터) 수
+param set-default CA_ROTOR_COUNT 4
+
+# --- 로터 0: 우전방 (Front-Right) ---
+param set-default CA_ROTOR0_PX 0.198
+param set-default CA_ROTOR0_PY 0.213
+param set-default CA_ROTOR0_KM 0.05 # (+값 = 반시계 방향 회전, CCW)
+
+# --- 로터 1: 좌후방 (Rear-Left) ---
+param set-default CA_ROTOR1_PX -0.198
+param set-default CA_ROTOR1_PY -0.213
+param set-default CA_ROTOR1_KM 0.05 # (+값 = 반시계 방향 회전, CCW)
+
+# --- 로터 2: 좌전방 (Front-Left) ---
+param set-default CA_ROTOR2_PX 0.198
+param set-default CA_ROTOR2_PY -0.213
+param set-default CA_ROTOR2_KM -0.05 # (-값 = 시계 방향 회전, CW)
+
+# --- 로터 3: 우후방 (Rear-Right) ---
+param set-default CA_ROTOR3_PX -0.198
+param set-default CA_ROTOR3_PY 0.213
+param set-default CA_ROTOR3_KM -0.05 # (-값 = 시계 방향 회전, CW)
+
+param set-default CA_SV_CS_COUNT 0
+
+
+# -------------------------------------------------------
+# PWM 출력 채널 - 모터 함수 매핑 설정
+# -------------------------------------------------------
+
+# PWM_MAIN_FUNC1~4: 각 PWM 출력 채널에 모터 기능 할당
+param set-default PWM_MAIN_FUNC1 101
+param set-default PWM_MAIN_FUNC2 102
+param set-default PWM_MAIN_FUNC3 103
+param set-default PWM_MAIN_FUNC4 104
+
+# -------------------------------------------------------

@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "name": "PX4-Autopilot",
+      "path": "."
+    },
+    {
+      "name": "pilot_ws",
+      "path": "pilot_ws"
+    }
+  ],
+  "settings": {}
+}

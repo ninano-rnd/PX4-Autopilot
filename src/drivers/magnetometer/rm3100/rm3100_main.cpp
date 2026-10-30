@@ -89,6 +89,7 @@ void RM3100::print_usage()
 	PRINT_MODULE_USAGE_COMMAND("start");
 	PRINT_MODULE_USAGE_PARAMS_I2C_SPI_DRIVER(true, true);
 	PRINT_MODULE_USAGE_PARAM_INT('R', 0, 0, 35, "Rotation", true);
+	PRINT_MODULE_USAGE_PARAM_INT('M', 0, 0, 7, "Axis reversal bitmask (bit0=X bit1=Y bit2=Z)", true);
 	PRINT_MODULE_USAGE_DEFAULT_COMMANDS();
 }
 
@@ -104,10 +105,14 @@ extern "C" int rm3100_main(int argc, char *argv[])
 	cli.default_spi_frequency = 1 * 1000 * 1000;
 #endif // CONFIG_SPI
 
-	while ((ch = cli.getOpt(argc, argv, "R:")) != EOF) {
+	while ((ch = cli.getOpt(argc, argv, "R:M:")) != EOF) {
 		switch (ch) {
 		case 'R':
 			cli.rotation = (enum Rotation)atoi(cli.optArg());
+			break;
+
+		case 'M':
+			cli.custom1 = atoi(cli.optArg());
 			break;
 		}
 	}

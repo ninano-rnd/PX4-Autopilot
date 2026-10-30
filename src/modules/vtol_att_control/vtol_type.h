@@ -47,6 +47,7 @@
 #include <lib/mathlib/mathlib.h>
 #include <px4_platform_common/module_params.h>
 
+struct vtol_vehicle_status_s;
 
 static constexpr float kFlapSlewRateVtol = 1.f; // minimum time from none to full flap deflection [s]
 static constexpr float kSpoilerSlewRateVtol = 1.f; // minimum time from none to full spoiler deflection [s]

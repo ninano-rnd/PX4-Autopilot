@@ -5,21 +5,27 @@
 board_adc start
 
 # SPI1
-icm20689 -s -b 1 -R 2 start
+bmi088 -s -b 1 -A -R 2 start
+if ! bmi088 -s -b 1 -G -R 2 start
+then
+	icm20689 -s -b 1 -R 6 start
+fi
 
 # SPI2
-rm3100 -s -b 2 start
+# -M 2: Y axis reversed (reversed connector), matches ArduPilot AP_RM3100_REVERSAL_MASK=2
+# -M 1 → X만 반전
+# -M 2 → Y만 반전 (현재 설정)
+# -M 4 → Z만 반전
+# -M 6 (2+4) → Y, Z 둘 다 반전
+# -M 7 (1+2+4) → X, Y, Z 모두 반전
+rm3100 -s -b 2 -R 14 -M 2 start
 
 # SPI4
-bmi088 -s -b 4 -A -R 2 start
-if ! bmi088 -s -b 4 -G -R 2 start
-then
-	icm42688p -R 2 -s start
-fi
+icm42688p -s -b 4 -R 6 start
 ms5611 -s -b 4 start
 
 # SPI6
-if ! icm20649 -s -b 6 -R 2 start
+if ! icm45686 -s -b 6 -R 0 start
 then
 	icm20689 -s -b 6 -R 2 start
 fi

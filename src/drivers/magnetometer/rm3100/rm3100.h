@@ -145,4 +145,11 @@ private:
 
 	int _failure_count{0};
 
+	/**
+	 * Per-axis raw reading sign inversion, to compensate for a reversed
+	 * sensor connector/PCB wiring (bit0=X, bit1=Y, bit2=Z).
+	 * Equivalent to ArduPilot's AP_RM3100_REVERSAL_MASK.
+	 */
+	const int32_t _axis_reversal_mask{0};
+
 };

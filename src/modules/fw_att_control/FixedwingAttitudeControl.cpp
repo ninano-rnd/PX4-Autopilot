@@ -303,7 +303,9 @@ void FixedwingAttitudeControl::Run()
 				const Quatf q_sp(_att_sp.q_d);
 
 				if (q_sp.isAllFinite()) {
-					const Quatf q_current(att.q);
+					// Use the FW frame for both attitude error and turn coordination. For tailsitters,
+					// _R already includes the hover-to-FW rotation; att.q is still in the hover frame.
+					const Quatf q_current(_R);
 					const Vector3f att_err = computeAttitudeError(q_current, q_sp);
 
 					Vector3f body_rates_setpoint;

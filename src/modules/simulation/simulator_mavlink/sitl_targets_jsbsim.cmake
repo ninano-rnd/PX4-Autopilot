@@ -45,6 +45,7 @@ if(JSBSIM_INCLUDE_DIR)
 	set(worlds
 		none
 		LSZH
+		KR_JOMA
 	)
 
 

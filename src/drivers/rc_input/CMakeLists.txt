@@ -30,6 +30,17 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 ############################################################################
+if(CONFIG_RC_INPUT_SBUS_CAPTURE)
+	px4_add_module(
+		MODULE drivers__rc_input
+		MAIN rc_input
+		SRCS TimerRCInput.cpp
+		MODULE_CONFIG module.yaml
+		DEPENDS rc
+	)
+	return()
+endif()
+
 px4_add_module(
 	MODULE drivers__rc_input
 	MAIN rc_input
