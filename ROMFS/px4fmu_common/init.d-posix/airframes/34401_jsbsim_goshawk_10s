@@ -17,8 +17,6 @@ param set COM_RCL_EXCEPT 31
 param set COM_DLL_EXCEPT 31
 param set COM_RC_IN_MODE 4
 
-
-
 # -------------------------------------------------------
 # IMU 자세 보정 (Board Rotation)
 # -------------------------------------------------------
@@ -76,7 +74,7 @@ param set FW_YR_P 0.15
 # 고정익 스로틀 / TECS (FW Throttle / Energy Control System)
 # -------------------------------------------------------
 
-param set FW_T_THR_DAMPING 0.1 #0.05
+param set FW_T_THR_DAMPING 0.05 #0.05
 param set FW_T_ALT_TC 8 #5
 # FW_THR_TRIM: 수평 비행 트림 스로틀 (0~1)
 param set-default FW_THR_TRIM 0.5

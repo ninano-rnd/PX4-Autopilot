@@ -115,6 +115,7 @@ px4_add_romfs_files(
 	31402_jsbsim_spear_1s
 	31402_jsbsim_spear_1s.post
 	34401_jsbsim_goshawk_10s
+	34401_jsbsim_goshawk_10s.post
 
 	50000_gz_rover_differential
 	51000_gz_rover_ackermann
