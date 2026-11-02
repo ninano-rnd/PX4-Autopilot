@@ -48,29 +48,29 @@ export PX4_SIM_WORLD=${world}
 # Need more architectural discussions to make this more scalable
 case "$model" in
         rascal)
-            MODEL_NAME="Rascal110-JSBSim"
-            ;;
+		MODEL_NAME="Rascal110-JSBSim"
+		;;
         malolo)
-            MODEL_NAME="Malolo1"
-            ;;
+		MODEL_NAME="Malolo1"
+		;;
         quadrotor_x)
-            MODEL_NAME="quadrotor_x"
-            ;;
+		MODEL_NAME="quadrotor_x"
+		;;
         hexarotor_x)
-            MODEL_NAME="hexarotor_x"
-            ;;
+		MODEL_NAME="hexarotor_x"
+		;;
         bubo_4s)
-            MODEL_NAME="bubo_4s"
-            ;;
-				goshawk_10s)
-						MODEL_NAME="goshawk_10s"
-						;;
+		MODEL_NAME="bubo_4s"
+		;;
+	goshawk_10s)
+		MODEL_NAME="goshawk_10s"
+		;;
         spear_1s)
-            MODEL_NAME="spear_1s"
-            ;;
+		MODEL_NAME="spear_1s"
+		;;
         *)
-            echo "Unknown Model"
-            exit 1
+		echo "Unknown Model"
+		exit 1
 
 esac
 
