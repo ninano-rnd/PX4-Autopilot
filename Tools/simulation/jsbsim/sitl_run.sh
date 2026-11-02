@@ -47,28 +47,28 @@ export PX4_SIM_WORLD=${world}
 # This is needed for aircraft namespace mapping
 # Need more architectural discussions to make this more scalable
 case "$model" in
-        rascal)
+	rascal)
 		MODEL_NAME="Rascal110-JSBSim"
 		;;
-        malolo)
+	malolo)
 		MODEL_NAME="Malolo1"
 		;;
-        quadrotor_x)
+	quadrotor_x)
 		MODEL_NAME="quadrotor_x"
 		;;
-        hexarotor_x)
+	hexarotor_x)
 		MODEL_NAME="hexarotor_x"
 		;;
-        bubo_4s)
+	bubo_4s)
 		MODEL_NAME="bubo_4s"
 		;;
 	goshawk_10s)
 		MODEL_NAME="goshawk_10s"
 		;;
-        spear_1s)
+	spear_1s)
 		MODEL_NAME="spear_1s"
 		;;
-        *)
+	*)
 		echo "Unknown Model"
 		exit 1
 
