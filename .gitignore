@@ -18,6 +18,7 @@ Packages/*
 debug/*
 build/*
 build_*/
+images/*
 cscope.out
 cscope.in.out
 cscope.po.out
