@@ -46,9 +46,10 @@ param set FW_PR_D 0.000
 param set FW_PR_FF 0.1
 param set FW_PR_I 0.05
 param set FW_PR_IMAX 0.400
-param set FW_PR_P 0.18
+# Match the real Goshawk flight log: 20261108_flight/07_01_55.ulg.
+param set FW_PR_P 0.15
 # FW_PSP_OFF: 수평 비행 시 기본 피치 트림 오프셋 (도)
-param set-default FW_PSP_OFF 6
+param set FW_PSP_OFF 6
 
 # -------------------------------------------------------
 # 고정익 롤/요 제어 (FW Roll / Yaw Control)
@@ -58,10 +59,10 @@ param set-default FW_PSP_OFF 6
 # param set-default FW_R_TC 0.4
 # FW_RR_FF: 롤 레이트 피드포워드 게인
 param set FW_RR_D 0.0
-param set FW_RR_FF 0.1
-param set FW_RR_I 0.05
+param set FW_RR_FF 0.5
+param set FW_RR_I 0.1
 param set FW_RR_IMAX 0.2
-param set FW_RR_P 0.15
+param set FW_RR_P 0.05
 
 # FW_YR_*: 요 레이트 PID 제어 파라미터
 param set FW_YR_D 0.0
@@ -77,93 +78,114 @@ param set FW_YR_P 0.15
 param set FW_T_THR_DAMPING 0.05 #0.05
 param set FW_T_ALT_TC 8 #5
 # FW_THR_TRIM: 수평 비행 트림 스로틀 (0~1)
-param set-default FW_THR_TRIM 0.5
+param set FW_THR_TRIM 0.5
 # FW_THR_MAX: 최대 스로틀 (0~1)
-param set-default FW_THR_MAX 0.8
+param set FW_THR_MAX 0.8
 # FW_THR_MIN: 최소 스로틀 (0~1)
-param set-default FW_THR_MIN 0.25
+param set FW_THR_MIN 0.25
 # FW_T_CLMB_MAX: TECS 최대 상승률 (m/s)
-param set-default FW_T_CLMB_MAX 6
+param set FW_T_CLMB_MAX 6
 # FW_T_HRATE_FF: TECS 고도 레이트 피드포워드 게인
-param set-default FW_T_HRATE_FF 0.5
+param set FW_T_HRATE_FF 0.5
 # FW_T_SINK_MAX: TECS 최대 하강률 (m/s)
-param set-default FW_T_SINK_MAX 3
+param set FW_T_SINK_MAX 3
 # FW_T_SINK_MIN: TECS 최소 하강률 (m/s)
-param set-default FW_T_SINK_MIN 1.6
+param set FW_T_SINK_MIN 1.6
 
 # -------------------------------------------------------
 # 고정익 속도 (FW Airspeed)
 # -------------------------------------------------------
 
 # FW_AIRSPD_STALL: 실속 속도 (m/s) - 안전 최저 속도 기준
-param set-default FW_AIRSPD_STALL 15
+param set FW_AIRSPD_STALL 15
 # FW_AIRSPD_MIN: 최소 비행 속도 (m/s)
-param set-default FW_AIRSPD_MIN 18
+param set FW_AIRSPD_MIN 18
 # FW_AIRSPD_TRIM: 순항 기준 속도 (m/s)
-param set-default FW_AIRSPD_TRIM 22
+param set FW_AIRSPD_TRIM 22
 # FW_AIRSPD_MAX: 최대 비행 속도 (m/s)
-param set-default FW_AIRSPD_MAX 33
+param set FW_AIRSPD_MAX 33
+
+param set-default NPFG_PERIOD 20.0
 
 # -------------------------------------------------------
 # 멀티콥터 자세 제어 (MC Attitude Control)
 # -------------------------------------------------------
 
 # MC_AIRMODE 2: 요 에어모드 활성화 - 모터 최소값 이하에서도 요 제어 유지
-param set-default MC_AIRMODE 2
+param set MC_AIRMODE 2
 # MAN_ARM_GESTURE 0: 수동 암 제스처 비활성화 - 요 에어모드 사용 시 필수
-param set-default MAN_ARM_GESTURE 0
+param set MAN_ARM_GESTURE 0
 # MC_ROLL_P / MC_PITCH_P: 롤/피치 자세 비례 게인
-param set-default MC_ROLL_P 3
-param set-default MC_PITCH_P 3
-param set-default MC_YAW_P 2.3
+param set MC_ROLL_P 2.2
+param set MC_PITCH_P 1.7
+param set MC_YAW_P 1.2
 # MC_ROLLRATE_P / MC_PITCHRATE_P: 롤/피치 레이트 비례 게인
-param set-default MC_ROLLRATE_P 0.10
-param set-default MC_PITCHRATE_P 0.10
+param set MC_ROLLRATE_P 0.50
+param set MC_PITCHRATE_P 0.20
 
-param set-default MPC_XY_CRUISE 8
-param set-default MPC_XY_VEL_MAX 12
-param set-default MPC_Z_VEL_MAX_UP 5
-param set-default MPC_Z_VEL_MAX_DN 3
-param set-default MPC_Z_V_AUTO_UP 5
-param set-default MPC_Z_V_AUTO_DN 3
-param set-default MPC_TKO_SPEED 5
-param set-default MPC_LAND_SPEED 0.7
-param set-default MPC_LAND_CRWL 0.3
+param set MC_ROLLRATE_K 0.6
+param set MC_ROLLRATE_D 0.002
+param set MC_ROLLRATE_I 0.125
+param set MC_PITCHRATE_K 0.8
+param set MC_PITCHRATE_D 0.002
+param set MC_PITCHRATE_I 0.15
+
+param set MPC_XY_CRUISE 8
+param set MPC_XY_VEL_MAX 12
+param set MPC_Z_VEL_MAX_UP 5
+param set MPC_Z_VEL_MAX_DN 3
+param set MPC_Z_V_AUTO_UP 5
+param set MPC_Z_V_AUTO_DN 3
+param set MPC_TKO_SPEED 5
+param set MPC_LAND_SPEED 0.7
+param set MPC_LAND_CRWL 0.3
+
+param set MPC_XY_VEL_P_ACC 1.75
+param set MPC_XY_VEL_I_ACC 0.3
+param set MPC_XY_VEL_D_ACC 0.1
+
+param set MPC_Z_VEL_P_ACC 2.0
+param set MPC_Z_VEL_I_ACC 0.6
+param set MPC_Z_VEL_D_ACC 0.0
+
 
 # -------------------------------------------------------
 # VTOL 전환 파라미터 (VT Transition)
 # -------------------------------------------------------
 
 # VT_ARSP_TRANS: MC→FW 전환 시작 속도 (m/s). 이 속도 도달 시 고정익 모드로 전환.
-param set-default VT_ARSP_TRANS 15
+param set VT_ARSP_TRANS 15
 # VT_B_TRANS_DUR: 후방 전환(FW→MC) 지속 시간 (초)
-param set-default VT_B_TRANS_DUR 5
+param set VT_B_TRANS_DUR 5
 # VT_FW_DIFTHR_EN: 고정익 모드 차동 스로틀 활성화 비트마스크. 7 = 롤/피치/요 모두 활성화.
-param set-default VT_FW_DIFTHR_EN 7
+param set VT_FW_DIFTHR_EN 7
 # VT_FW_DIFTHR_S_R: 롤 차동 스로틀 스케일
-param set-default VT_FW_DIFTHR_S_R 1.0
+param set VT_FW_DIFTHR_S_R 1.0
 # VT_FW_DIFTHR_S_P: 피치 차동 스로틀 스케일
-param set-default VT_FW_DIFTHR_S_P 1.0
+param set VT_FW_DIFTHR_S_P 1.0
 # VT_FW_DIFTHR_S_Y: 요 차동 스로틀 스케일 (최대 권장값 1.0)
-param set-default VT_FW_DIFTHR_S_Y 1
+param set VT_FW_DIFTHR_S_Y 1
 # VT_F_TRANS_DUR: 전방 전환(MC→FW) 지속 시간 (초)
-param set-default VT_F_TRANS_DUR 3
-param set-default VT_F_TR_OL_TM 3
+param set VT_F_TRANS_DUR 3
+param set VT_F_TR_OL_TM 3
 # VT_TYPE 0: VTOL 기체 유형 = 테일시터(Tailsitter)
-param set-default VT_TYPE 0
+param set VT_TYPE 0
 
 # -------------------------------------------------------
 # 기타 (Miscellaneous)
 # -------------------------------------------------------
 
 # WV_EN 0: 웨더베인 비활성화 - 바람 방향으로 기수 자동 정렬 기능 끔
-param set-default WV_EN 0
+param set WV_EN 0
 
 # EKF2_FUSE_BETA 0: 사이드슬립 측정값 EKF2 융합 비활성화 - 테일시터에서 권장
-param set-default EKF2_FUSE_BETA 0
+param set EKF2_FUSE_BETA 0
 
-# SYS_HAS_NUM_ASPD 0: 에어스피드 센서가 없는 비행 환경을 위해 에어스피드 센서 검사 비활성화
-param set-default SYS_HAS_NUM_ASPD 0
+# One JSBSim dynamic-pressure sensor, configured in configs/goshawk_10s.xml.
+# Enable the measured-airspeed path used by the real aircraft, not the TECS fallback.
+param set SYS_HAS_NUM_ASPD 1
+param set FW_USE_AIRSPD 1
+param set ASPD_PRIMARY 1
 
 # COM_RC_IN_MODE 4: 수동 조종 입력(RC/Joystick) 검사 및 이로 인한 Failsafe 비활성화
 param set-default COM_RC_IN_MODE 4
